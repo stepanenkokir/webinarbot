@@ -14,7 +14,21 @@ const registerScene = new Scenes.WizardScene(
 		ctx.reply("Добро пожаловать! Для регистрации на вебинар, пожалуйста, введите ваше имя:", getCancelMenu())
 		return ctx.wizard.next()
 	},
-	// Шаг 2: Запрос номера телефона
+	// Шаг 2: Запрос электронной почты
+	(ctx) => {
+		// Проверка на отмену
+		if (ctx.message.text === "Отмена") {
+			ctx.reply("Регистрация отменена", getMainMenu())
+			return ctx.scene.leave()
+		}
+		// Сохраняем имя пользователя
+		ctx.wizard.state.name = ctx.message.text
+
+		// Запрашиваем email
+		ctx.reply("Теперь, пожалуйста, введте email:", getCancelMenu())
+		return ctx.wizard.next()
+	},
+	// Шаг 3: Запрос номера телефона
 	(ctx) => {
 		// Проверка на отмену
 		if (ctx.message.text === "Отмена") {
@@ -23,7 +37,7 @@ const registerScene = new Scenes.WizardScene(
 		}
 
 		// Сохраняем имя пользователя
-		ctx.wizard.state.name = ctx.message.text
+		ctx.wizard.state.email = ctx.message.text
 
 		// Запрашиваем номер телефона
 		ctx.reply("Теперь, пожалуйста, поделитесь вашим номером телефона:", getPhoneMenu())
@@ -37,7 +51,6 @@ const registerScene = new Scenes.WizardScene(
 			ctx.reply("Регистрация отменена", getMainMenu())
 			return ctx.scene.leave()
 		}
-
 		let phoneNumber
 
 		// Проверяем, как пользователь передал номер телефона
@@ -57,6 +70,7 @@ const registerScene = new Scenes.WizardScene(
 		const userData = {
 			telegramId: ctx.from.id,
 			username: ctx.from.username || "Отсутствует",
+			email: ctx.wizard.state.email,
 			name: ctx.wizard.state.name,
 			phone: phoneNumber,
 		}
@@ -65,7 +79,7 @@ const registerScene = new Scenes.WizardScene(
 
 		if (saved) {
 			// Отправляем сообщение об успешной регистрации
-			ctx.reply(`✅ *Вы успешно зарегистрированы на вебинар!*\n\n` + `👤 Имя: *${ctx.wizard.state.name}*\n` + `📱 Телефон: *${phoneNumber}*\n\n` + `Благодарим за регистрацию!`, {
+			ctx.reply(`✅ *Вы успешно зарегистрированы на вебинар!*\n\n` + `👤 Имя: *${ctx.wizard.state.name}*\n` + `📧 Email: *${ctx.wizard.state.email}*\n\n` + `📱 Телефон: *${phoneNumber}*\n\n` + `Благодарим за регистрацию!`, {
 				parse_mode: "Markdown",
 				...getMainMenu(),
 			})
