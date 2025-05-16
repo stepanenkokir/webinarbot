@@ -22,5 +22,13 @@
 	},
 	"devDependencies": {
 		"nodemon": "^3.0.3"
+	},
+	"nodemonConfig": {
+		"ignore": [
+			"test/*",
+			"logs/*",
+			"*.md",
+			"*.json"
+		]
 	}
 }

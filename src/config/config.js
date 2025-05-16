@@ -23,19 +23,18 @@ const config = {
 	// Настройки вебинара
 	webinarInfo: {
 		title: "Вебинар",
-		date: "2025-06-15",
-		time: "15:00",
+		date: "2025-05-29",
+		time: "19:00 EDT",
 		duration: "01:30",
-		speaker: "[имя спикера]",
-		topic: "[укажите тему вебинара]",
+		speaker: "Татьяна",
+		topic: "Итальянское капсульное наращивание волос",
 	},
 
 	// Контактная информация
 	contacts: {
-		email: "contact@example.com",
-		phone: "+7 (123) 456-78-90",
+		email: "contact@beautybytati.com",
 		telegram: "https://t.me/your_channel",
-		whatsapp: "https://wa.me/your_number",
+		instagram: "https://wa.me/your_number",
 	},
 }
 

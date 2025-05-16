@@ -113,4 +113,4 @@ For questions or suggestions, contact [your-email@example.com](mailto:your-email
 
 ---
 
-Built with 🚀 by [Your Name]
+Built with 🚀 by Kirill Stepanenko stepanenkokir@gmail.com

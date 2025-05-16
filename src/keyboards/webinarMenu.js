@@ -6,13 +6,17 @@ export const getWebinarInlineMenu = () => {
 	return Markup.inlineKeyboard([
 		[Markup.button.callback("🔗 Получить ссылку на вебинар", "get_webinar_link")],
 		[Markup.button.callback("📅 Добавить в календарь", "add_to_calendar")],
-		[Markup.button.url("🌐 Наш сайт", "https://example.com")],
+		[Markup.button.url("🌐 Наш сайт", "https://beautybytati.com")],
 	])
 }
 
 // Меню с контактами
 export const getContactsMenu = () => {
-	return Markup.inlineKeyboard([[Markup.button.url("Telegram", "https://t.me/your_channel")], [Markup.button.url("WhatsApp", "https://wa.me/your_number")]])
+	const { telegram } = config.contacts
+	return Markup.inlineKeyboard([
+		[Markup.button.url("Telegram", telegram)],
+		// [Markup.button.url("Instagram", "https://wa.me/your_number")]
+	])
 }
 
 // Меню для добавления в календарь
