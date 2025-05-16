@@ -1,5 +1,6 @@
 // src/keyboards/webinarMenu.js
 import { Markup } from "telegraf"
+import config from "../config/config.js"
 
 // Создание inline меню для вебинара
 export const getWebinarInlineMenu = () => {
