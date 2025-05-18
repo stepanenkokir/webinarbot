@@ -2,7 +2,7 @@
 import { Scenes } from "telegraf"
 import { saveUserData } from "../database/userRepository.js"
 import { getMainMenu } from "../keyboards/mainMenu.js"
-import { getCancelMenu, getPhoneMenu } from "../keyboards/mainMenu.js"
+import { getPhoneMenu } from "../keyboards/mainMenu.js"
 import { getWebinarInlineMenu } from "../keyboards/webinarMenu.js"
 import config from "../config/config.js"
 
@@ -11,33 +11,13 @@ const registerScene = new Scenes.WizardScene(
 	"REGISTER_WIZARD",
 	// Шаг 1: Запрос имени
 	(ctx) => {
-		ctx.reply("Добро пожаловать! Для регистрации на вебинар, пожалуйста, введите ваше имя:", getCancelMenu())
+		ctx.reply("Добро пожаловать! Для регистрации на вебинар, пожалуйста, введите ваше имя:")
 		return ctx.wizard.next()
 	},
-	// Шаг 2: Запрос электронной почты
+	// Шаг 2: Запрос номера телефона
 	(ctx) => {
-		// Проверка на отмену
-		if (ctx.message.text === "Отмена") {
-			ctx.reply("Регистрация отменена", getMainMenu())
-			return ctx.scene.leave()
-		}
 		// Сохраняем имя пользователя
 		ctx.wizard.state.name = ctx.message.text
-
-		// Запрашиваем email
-		ctx.reply("Теперь, пожалуйста, введте email:", getCancelMenu())
-		return ctx.wizard.next()
-	},
-	// Шаг 3: Запрос номера телефона
-	(ctx) => {
-		// Проверка на отмену
-		if (ctx.message.text === "Отмена") {
-			ctx.reply("Регистрация отменена", getMainMenu())
-			return ctx.scene.leave()
-		}
-
-		// Сохраняем имя пользователя
-		ctx.wizard.state.email = ctx.message.text
 
 		// Запрашиваем номер телефона
 		ctx.reply("Теперь, пожалуйста, поделитесь вашим номером телефона:", getPhoneMenu())
@@ -46,11 +26,6 @@ const registerScene = new Scenes.WizardScene(
 	},
 	// Шаг 3: Сохранение данных и отправка ссылки на вебинар
 	(ctx) => {
-		// Проверка на отмену
-		if (ctx.message.text === "Отмена") {
-			ctx.reply("Регистрация отменена", getMainMenu())
-			return ctx.scene.leave()
-		}
 		let phoneNumber
 
 		// Проверяем, как пользователь передал номер телефона
@@ -62,7 +37,9 @@ const registerScene = new Scenes.WizardScene(
 			phoneNumber = ctx.message.text
 		} else {
 			// Если пользователь отправил что-то другое
-			ctx.reply('Пожалуйста, введите номер телефона в формате +XXXXXXXXXXX или нажмите на кнопку "Поделиться номером телефона"')
+			ctx.reply(
+				'Пожалуйста, введите номер телефона в формате +XXXXXXXXXXX или нажмите на кнопку "Поделиться номером телефона"'
+			)
 			return // Остаемся на текущем шаге
 		}
 
@@ -70,7 +47,6 @@ const registerScene = new Scenes.WizardScene(
 		const userData = {
 			telegramId: ctx.from.id,
 			username: ctx.from.username || "Отсутствует",
-			email: ctx.wizard.state.email,
 			name: ctx.wizard.state.name,
 			phone: phoneNumber,
 		}
@@ -79,22 +55,27 @@ const registerScene = new Scenes.WizardScene(
 
 		if (saved) {
 			// Отправляем сообщение об успешной регистрации
-			ctx.reply(`✅ *Вы успешно зарегистрированы на вебинар!*\n\n` + `👤 Имя: *${ctx.wizard.state.name}*\n` + `📧 Email: *${ctx.wizard.state.email}*\n\n` + `📱 Телефон: *${phoneNumber}*\n\n` + `Благодарим за регистрацию!`, {
-				parse_mode: "Markdown",
-				...getMainMenu(),
-			})
+			ctx.reply(
+				`✅ *Вы успешно зарегистрированы на вебинар!*\n\n` +
+					`👤 Имя: *${ctx.wizard.state.name}*\n` +
+					`📱 Телефон: *${phoneNumber}*\n\n` +
+					`Благодарим за регистрацию!\n\n` +
+					`Теперь Вам открыт доступ в наш закрытый канал`,
+				{
+					parse_mode: "Markdown",
+					...getMainMenu(ctx),
+				}
+			)
 
-			// Отправляем ссылку на вебинар
-			ctx.reply(`🔗 *Ссылка на вебинар:*`, {
+			ctx.reply(`🔗 *Дополнительно:*`, {
 				parse_mode: "Markdown",
-			})
-
-			ctx.reply(config.WEBINAR_LINK, {
-				disable_web_page_preview: false,
 				...getWebinarInlineMenu(),
 			})
 		} else {
-			ctx.reply("К сожалению, произошла ошибка при сохранении ваших данных. Пожалуйста, попробуйте еще раз позже.", getMainMenu())
+			ctx.reply(
+				"К сожалению, произошла ошибка при сохранении ваших данных. Пожалуйста, попробуйте еще раз позже.",
+				getMainMenu(ctx)
+			)
 		}
 
 		return ctx.scene.leave()

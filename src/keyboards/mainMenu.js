@@ -1,16 +1,15 @@
 // src/keyboards/mainMenu.js
 import { Markup } from "telegraf"
+import { findUserByTelegramId } from "../database/userRepository.js"
 
 // Создание главного меню
-export const getMainMenu = () => {
-	return Markup.keyboard([["📝 Регистрация на вебинар"], ["🔗 Получить ссылку", "📞 Связаться с нами"], ["ℹ️ О вебинаре", "❓ Помощь"]]).resize()
-}
-
-// Меню отмены операции
-export const getCancelMenu = () => {
-	return Markup.keyboard([["Отмена"]])
-		.oneTime()
-		.resize()
+export const getMainMenu = (ctx) => {
+	const user = findUserByTelegramId(ctx.from.id)
+	let firstMenu = ["📝 Регистрация на вебинар"]
+	if (user) {
+		firstMenu = ["🔗 Перейти в закрытый канал"]
+	}
+	return Markup.keyboard([firstMenu, ["ℹ️ О вебинаре", "❓ Помощь"]]).resize()
 }
 
 // Меню для отправки контакта

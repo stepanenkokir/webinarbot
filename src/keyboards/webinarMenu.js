@@ -4,19 +4,10 @@ import config from "../config/config.js"
 
 // Создание inline меню для вебинара
 export const getWebinarInlineMenu = () => {
+	const { web } = config.contacts
 	return Markup.inlineKeyboard([
-		[Markup.button.callback("🔗 Получить ссылку на вебинар", "get_webinar_link")],
 		[Markup.button.callback("📅 Добавить в календарь", "add_to_calendar")],
-		[Markup.button.url("🌐 Наш сайт", "https://beautybytati.com")],
-	])
-}
-
-// Меню с контактами
-export const getContactsMenu = () => {
-	const { telegram } = config.contacts
-	return Markup.inlineKeyboard([
-		[Markup.button.url("Telegram", telegram)],
-		// [Markup.button.url("Instagram", "https://wa.me/your_number")]
+		[Markup.button.url("🌐 Наш сайт", web)],
 	])
 }
 

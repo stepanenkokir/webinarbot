@@ -24,7 +24,9 @@ export const createGoogleCalendarUrl = () => {
 	const endTime = `${endHour.toString().padStart(2, "0")}${endMinute.toString().padStart(2, "0")}`
 
 	// Создаем URL для Google Calendar
-	return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${formattedDate}T${startTime}00/${formattedDate}T${endTime}00&details=${encodeURIComponent(
-		"Ссылка на вебинар: " + config.WEBINAR_LINK
+	return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+		title
+	)}&dates=${formattedDate}T${startTime}00/${formattedDate}T${endTime}00&details=${encodeURIComponent(
+		"Вебинар по наращиванию волос"
 	)}`
 }

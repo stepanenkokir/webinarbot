@@ -3,9 +3,9 @@ import { Telegraf, session, Scenes } from "telegraf"
 import config from "./config/config.js"
 import { initDatabase } from "./database/db.js"
 import registerScene from "./scenes/registerScene.js"
-import { handleStart, handleWebinar, handleHelp } from "./handlers/commandHandlers.js"
-import { handleGetLink, handleAboutWebinar, handleContactUs, handleUnknownCommand } from "./handlers/menuHandlers.js"
-import { handleGetWebinarLink, handleAddToCalendar } from "./handlers/actionHandlers.js"
+import { handleStart, handleHelp, handleRegister } from "./handlers/commandHandlers.js"
+import { handleGetLink, handleAboutWebinar, handleUnknownCommand } from "./handlers/menuHandlers.js"
+import { handleAddToCalendar } from "./handlers/actionHandlers.js"
 
 // Инициализация базы данных
 initDatabase()
@@ -22,20 +22,17 @@ bot.use(stage.middleware())
 
 // Обработка команд
 bot.command("start", handleStart)
-bot.command("webinar", handleWebinar)
+bot.command("webinar", handleGetLink)
+bot.command("register", handleRegister)
 bot.command("help", handleHelp)
 
 // Обработка текстовых команд из меню
-bot.hears("📝 Регистрация на вебинар", (ctx) => {
-	ctx.scene.enter("REGISTER_WIZARD")
-})
-bot.hears("🔗 Получить ссылку", handleGetLink)
+bot.hears("📝 Регистрация на вебинар", handleRegister)
+bot.hears("🔗 Перейти в закрытый канал", handleGetLink)
 bot.hears("ℹ️ О вебинаре", handleAboutWebinar)
-bot.hears("📞 Связаться с нами", handleContactUs)
 bot.hears("❓ Помощь", handleHelp)
 
 // Обработка callback-запросов
-bot.action("get_webinar_link", handleGetWebinarLink)
 bot.action("add_to_calendar", handleAddToCalendar)
 
 // Обработка неизвестных команд

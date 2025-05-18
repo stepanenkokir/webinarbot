@@ -1,5 +1,5 @@
 // src/database/userRepository.js
-import { getAllUsers, saveData } from "./db.js"
+import { getAllUsers, saveChangesData, saveData } from "./db.js"
 
 // Функция для сохранения данных пользователя
 export const saveUserData = (userData) => {
@@ -8,9 +8,10 @@ export const saveUserData = (userData) => {
 		const data = getAllUsers()
 
 		// Проверка на дубликаты по phone
-		const existingUserIndex = data.findIndex((user) => user.phone === userData.phone)
+		const existingUserIndex = data.findIndex((user) => user.telegramId === userData.telegramId)
 
 		if (existingUserIndex !== -1) {
+			saveChangesData(data[existingUserIndex])
 			// Обновление существующего пользователя
 			data[existingUserIndex] = {
 				...data[existingUserIndex],

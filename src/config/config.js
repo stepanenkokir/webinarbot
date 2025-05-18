@@ -2,6 +2,7 @@
 import dotenv from "dotenv"
 import { fileURLToPath } from "url"
 import path from "path"
+import fs from "fs"
 
 // Загрузка переменных окружения из файла .env
 dotenv.config()
@@ -11,30 +12,26 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const rootDir = path.resolve(__dirname, "../..")
 
+// Путь к файлу webinar.json
+const webinarPath = path.join(rootDir, "webinarInfo.json")
+const webinarInfo = JSON.parse(fs.readFileSync(webinarPath, "utf-8"))
+
 // Конфигурация приложения
 const config = {
 	// Константы из .env файла
 	BOT_TOKEN: process.env.BOT_TOKEN,
-	WEBINAR_LINK: process.env.WEBINAR_LINK,
+	CHANNEL_ID: process.env.CHANNEL_ID,
 
 	// Пути
 	DB_FILE: path.join(rootDir, "users.json"),
+	DB_CHANGES_FILE: path.join(rootDir, "users_changes.json"),
 
 	// Настройки вебинара
-	webinarInfo: {
-		title: "Вебинар",
-		date: "2025-05-29",
-		time: "19:00 EDT",
-		duration: "01:30",
-		speaker: "Татьяна",
-		topic: "Итальянское капсульное наращивание волос",
-	},
+	webinarInfo,
 
 	// Контактная информация
 	contacts: {
-		email: "contact@beautybytati.com",
-		telegram: "https://t.me/your_channel",
-		instagram: "https://wa.me/your_number",
+		web: process.env.WEBPORTAL,
 	},
 }
 
