@@ -3,6 +3,7 @@ import { getMainMenu } from "../keyboards/mainMenu.js"
 import { getWebinarInlineMenu } from "../keyboards/webinarMenu.js"
 import { findUserByTelegramId } from "../database/userRepository.js"
 import config from "../config/config.js"
+import { Markup } from "telegraf"
 
 // Обработка "Получить ссылку"
 export const handleGetLink = async (ctx) => {
@@ -24,9 +25,11 @@ export const handleGetLink = async (ctx) => {
 		})
 
 		// Отправка ссылки пользователю
+		//		await ctx.reply(`${user.name}, вот ваша ссылка для доступа к закрытому каналу:\n${inviteLink.invite_link}`)
+
 		await ctx.reply(
-			`${user.name}, вот ваша ссылка для доступа к закрытому каналу:\n${inviteLink.invite_link}\n
-			Нажмите на ссылку, чтобы присоединиться (действует только для вас в течении 1 минуты).`
+			`${user.name}, нажмите на кнопку ниже, чтобы перейти в закрытый канал:`,
+			Markup.inlineKeyboard([Markup.button.url("🔗 Перейти в канал", inviteLink.invite_link)])
 		)
 	} catch (error) {
 		console.error("Ошибка при обработке запроса на ссылку:", error)
